@@ -6,17 +6,21 @@
 <title>나의 시작페이지</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#1B2A4A;
     --ink-soft:#5B6B8C;
     --sun:#FFC857;
     --coral:#FF6F59;
-    --card:#FFFFFF;
     --sky-1:#EAF4FF;
     --sky-2:#FDF6E9;
-    --ring:rgba(27,42,74,0.08);
+    --ring:rgba(27,42,74,0.10);
+
+    --note-time:#FFF3AD;
+    --note-todo:#CDEFDD;
+    --note-weather:#CFE7FF;
+    --note-news:#FFD9CE;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -28,323 +32,202 @@
     transition: background 1.2s ease;
     overflow-x:hidden;
   }
-  /* time-of-day skins, toggled via body classes set by JS */
   body.dawn{ background: linear-gradient(160deg, #FFE3D6 0%, #FFF3D6 55%, #EAF4FF 100%); }
   body.day{ background: linear-gradient(160deg, #EAF4FF 0%, #F6FAFF 55%, #FDF6E9 100%); }
   body.dusk{ background: linear-gradient(160deg, #FFD9C2 0%, #FFB199 45%, #E8C2FF 100%); }
   body.night{ background: linear-gradient(160deg, #16223F 0%, #1B2A4A 55%, #2A3A63 100%); }
-  body.night{ color:#EAF0FF; }
-  body.night .card{ background:#22315A; color:#EAF0FF; box-shadow:0 12px 30px rgba(0,0,0,0.35); }
-  body.night .card h2{ color:#FFDD9A; }
-  body.night .greet{ color:#EAF0FF; }
-  body.night .subgreet{ color:#B6C2E6; }
-  body.night input#searchInput{ background:#1B2A4A; color:#EAF0FF; border-color:#3A4C7A; }
-  body.night .search-wrap{ box-shadow:0 10px 26px rgba(0,0,0,0.35); }
 
-  .stars{
-    position:fixed; inset:0; pointer-events:none; opacity:0; transition:opacity 1s ease;
-  }
+  .stars{ position:fixed; inset:0; pointer-events:none; opacity:0; transition:opacity 1s ease; }
   body.night .stars{ opacity:1; }
 
   .wrap{
-    max-width:1080px;
+    max-width:980px;
     margin:0 auto;
-    padding:56px 24px 80px;
+    padding:52px 24px 80px;
+    position:relative;
+    z-index:1;
   }
 
-  /* HERO */
-  .hero{
-    text-align:center;
-    padding: 24px 0 40px;
-  }
+  /* HERO: greeting + search only */
+  .hero{ text-align:center; padding: 6px 0 46px; }
   .greet{
     font-size:15px;
     letter-spacing:0.14em;
     text-transform:uppercase;
     color:var(--ink-soft);
-    margin:0 0 18px;
+    margin:0 0 8px;
     font-weight:500;
   }
-  .clock{
-    font-family:'Outfit', sans-serif;
-    font-weight:700;
-    font-size:clamp(58px, 13vw, 132px);
-    line-height:1;
-    letter-spacing:-0.02em;
-    margin:0;
-    display:flex;
-    align-items:baseline;
-    justify-content:center;
-    gap:14px;
+  body.night .greet{ color:#C7D3F5; }
+  .greet-sub{
+    font-family:'Gaegu', cursive;
+    font-size:28px;
+    color:var(--ink);
+    margin:0 0 28px;
   }
-  .clock .ampm{
-    font-size:clamp(16px,3vw,26px);
-    font-weight:500;
-    color:var(--coral);
-    align-self:flex-start;
-    margin-top:14px;
-  }
-  .date{
-    font-size:16px;
-    color:var(--ink-soft);
-    margin-top:10px;
-    font-weight:500;
-  }
+  body.night .greet-sub{ color:#EAF0FF; }
 
-  /* SEARCH */
   .search-wrap{
-    margin:36px auto 0;
+    margin:0 auto;
     max-width:600px;
     display:flex;
     align-items:center;
     gap:10px;
-    background:var(--card);
+    background:#fff;
     border-radius:999px;
     padding:8px 8px 8px 22px;
     box-shadow:0 10px 26px rgba(27,42,74,0.10);
     transition: box-shadow .2s ease, transform .15s ease;
   }
-  .search-wrap:focus-within{
-    box-shadow:0 12px 30px rgba(27,42,74,0.16);
-    transform:translateY(-1px);
-  }
+  .search-wrap:focus-within{ box-shadow:0 12px 30px rgba(27,42,74,0.16); transform:translateY(-1px); }
   .search-wrap svg{ flex:0 0 auto; opacity:0.55; }
   #searchInput{
-    flex:1;
-    border:none;
-    outline:none;
-    background:transparent;
-    font-family:'Noto Sans KR', sans-serif;
-    font-size:16px;
-    color:var(--ink);
-    padding:10px 0;
+    flex:1; border:none; outline:none; background:transparent;
+    font-family:'Noto Sans KR', sans-serif; font-size:16px; color:var(--ink); padding:10px 0;
   }
-  .engine-toggle{
-    display:flex;
-    gap:4px;
-    background:rgba(27,42,74,0.06);
-    border-radius:999px;
-    padding:4px;
-    flex:0 0 auto;
-  }
+  .engine-toggle{ display:flex; gap:4px; background:rgba(27,42,74,0.06); border-radius:999px; padding:4px; flex:0 0 auto; }
   .engine-toggle button{
-    border:none;
-    background:transparent;
-    padding:8px 14px;
-    border-radius:999px;
-    font-family:'Noto Sans KR', sans-serif;
-    font-size:13px;
-    font-weight:700;
-    color:var(--ink-soft);
-    cursor:pointer;
+    border:none; background:transparent; padding:8px 14px; border-radius:999px;
+    font-family:'Noto Sans KR', sans-serif; font-size:13px; font-weight:700; color:var(--ink-soft); cursor:pointer;
     transition: all .15s ease;
   }
-  .engine-toggle button.active{
-    background:var(--ink);
-    color:#fff;
-  }
+  .engine-toggle button.active{ background:var(--ink); color:#fff; }
   .search-go{
-    flex:0 0 auto;
-    width:44px; height:44px;
-    border-radius:50%;
-    border:none;
-    background:var(--sun);
-    color:var(--ink);
-    font-size:18px;
-    cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition: transform .15s ease, background .15s ease;
+    flex:0 0 auto; width:44px; height:44px; border-radius:50%; border:none; background:var(--sun); color:var(--ink);
+    font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: transform .15s ease;
   }
   .search-go:hover{ transform:scale(1.06); }
 
-  /* GRID */
-  .grid{
+  /* MEMO BOARD: 2 x 2 grid */
+  .board{
     display:grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap:22px;
-    margin-top:48px;
-    align-items:start;
+    grid-template-columns: 1fr 1fr;
+    gap:44px 36px;
+    margin-top:56px;
   }
-  @media (max-width: 760px){
-    .grid{ grid-template-columns: 1fr; }
+  @media (max-width: 680px){
+    .board{ grid-template-columns: 1fr; gap:52px; }
   }
 
-  .card{
-    background:var(--card);
-    border-radius:24px;
-    padding:28px 26px;
-    box-shadow:0 10px 30px rgba(27,42,74,0.07);
+  .memo-wrap{
+    transform: rotate(var(--rot, 0deg));
+    transition: transform .25s ease;
   }
-  .card h2{
-    margin:0 0 18px;
-    font-size:13px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--coral);
+  .memo-wrap:hover{ transform: rotate(0deg) translateY(-5px); }
+
+  .memo{
+    position:relative;
+    background: var(--note);
+    padding:30px 26px 24px;
+    min-height:300px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:
+      0 18px 30px rgba(27,42,74,0.16),
+      0 3px 8px rgba(27,42,74,0.10);
+    clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
+  }
+  .memo-fold{
+    position:absolute; top:0; right:0; width:28px; height:28px;
+    background: linear-gradient(135deg, rgba(0,0,0,0.14), rgba(0,0,0,0.03));
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+  }
+  .tape{
+    position:absolute; top:-15px; left:50%; transform: translateX(-50%) rotate(-4deg);
+    width:88px; height:28px;
+    background: linear-gradient(120deg, rgba(255,255,255,0.75), rgba(255,255,255,0.45));
+    border:1px solid rgba(255,255,255,0.6);
+    box-shadow:0 3px 6px rgba(27,42,74,0.14);
+  }
+
+  .memo-title{
+    font-family:'Gaegu', cursive;
+    font-size:24px;
     font-weight:700;
-  }
-
-  /* WEATHER */
-  .weather-top{
+    color:var(--ink);
+    margin:0 0 16px;
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:8px;
   }
-  .weather-icon{ font-size:56px; line-height:1; }
-  .weather-temp{
+
+  .memo-body{ flex:1; display:flex; flex-direction:column; }
+
+  /* TIME MEMO */
+  .time-display{
     font-family:'Outfit', sans-serif;
-    font-size:52px;
     font-weight:700;
+    font-size:clamp(40px, 7vw, 56px);
     line-height:1;
-  }
-  .weather-desc{
-    font-size:15px;
-    color:var(--ink-soft);
-    margin-top:4px;
-  }
-  .weather-meta{
+    letter-spacing:-0.02em;
     display:flex;
-    gap:22px;
-    margin-top:22px;
-    padding-top:18px;
-    border-top:1px solid var(--ring);
+    align-items:baseline;
+    gap:8px;
   }
-  .weather-meta div{ font-size:13px; color:var(--ink-soft); }
-  .weather-meta b{ display:block; font-size:16px; color:var(--ink); font-weight:700; margin-top:2px; }
-  body.night .weather-meta b{ color:#EAF0FF; }
-  .weather-loading, .news-loading{
-    color:var(--ink-soft); font-size:14px;
-  }
+  .time-display .ampm{ font-size:16px; font-weight:500; color:var(--coral); }
+  .time-date{ margin-top:12px; font-size:15px; color:var(--ink-soft); font-weight:500; }
+  .time-note-msg{ margin-top:auto; padding-top:16px; font-family:'Gaegu', cursive; font-size:19px; color:var(--ink-soft); }
 
-  /* NEWS */
-  .news-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
-  .news-list li{ border-bottom:1px solid var(--ring); padding-bottom:14px; }
-  .news-list li:last-child{ border-bottom:none; padding-bottom:0; }
-  .news-list a{
-    color:var(--ink);
-    text-decoration:none;
-    font-size:15px;
-    font-weight:500;
-    line-height:1.5;
-    display:block;
-  }
-  body.night .news-list a{ color:#EAF0FF; }
-  .news-list a:hover{ color:var(--coral); }
-  .news-source{
-    display:inline-block;
-    margin-top:5px;
-    font-size:12px;
-    color:var(--ink-soft);
-  }
+  /* WEATHER MEMO */
+  .weather-top{ display:flex; align-items:center; gap:16px; }
+  .weather-icon{ font-size:46px; line-height:1; }
+  .weather-temp{ font-family:'Outfit', sans-serif; font-size:42px; font-weight:700; line-height:1; }
+  .weather-desc{ font-size:14px; color:var(--ink-soft); margin-top:4px; }
+  .weather-meta{ display:flex; gap:20px; margin-top:auto; padding-top:16px; border-top:1px solid rgba(27,42,74,0.14); }
+  .weather-meta div{ font-size:12px; color:var(--ink-soft); }
+  .weather-meta b{ display:block; font-size:15px; color:var(--ink); font-weight:700; margin-top:2px; }
+  .weather-loading, .news-loading{ color:var(--ink-soft); font-size:14px; }
 
-  /* TODO */
-  .todo-card{ margin-top:22px; }
-  .todo-input-row{
-    display:flex;
-    gap:10px;
-    margin-bottom:18px;
-  }
+  /* TODO MEMO */
+  .todo-input-row{ display:flex; gap:8px; margin-bottom:14px; }
   #todoInput{
-    flex:1;
-    border:1px solid var(--ring);
-    border-radius:14px;
-    padding:12px 16px;
-    font-family:'Noto Sans KR', sans-serif;
-    font-size:15px;
-    background:transparent;
-    color:var(--ink);
-    outline:none;
+    flex:1; border:1px solid rgba(27,42,74,0.18); border-radius:10px; padding:10px 12px;
+    font-family:'Noto Sans KR', sans-serif; font-size:14px; background:rgba(255,255,255,0.5); color:var(--ink); outline:none;
     transition: border-color .15s ease;
   }
   #todoInput:focus{ border-color:var(--coral); }
-  body.night #todoInput{ color:#EAF0FF; border-color:#3A4C7A; }
   .todo-add{
-    flex:0 0 auto;
-    width:46px; height:46px;
-    border-radius:14px;
-    border:none;
-    background:var(--ink);
-    color:#fff;
-    font-size:20px;
-    cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition: transform .15s ease, background .15s ease;
+    flex:0 0 auto; width:38px; height:38px; border-radius:10px; border:none; background:var(--ink); color:#fff;
+    font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: transform .15s ease;
   }
   .todo-add:hover{ transform:scale(1.05); }
-  body.night .todo-add{ background:var(--sun); color:var(--ink); }
-
-  .todo-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; }
-  .todo-item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:12px 4px;
-    border-bottom:1px solid var(--ring);
+  .todo-list{
+    list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;
+    max-height:150px; overflow-y:auto;
   }
+  .todo-item{ display:flex; align-items:center; gap:10px; padding:8px 2px; border-bottom:1px solid rgba(27,42,74,0.10); }
   .todo-item:last-child{ border-bottom:none; }
   .todo-check{
-    flex:0 0 auto;
-    width:22px; height:22px;
-    border-radius:7px;
-    border:2px solid var(--ink-soft);
-    cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    background:transparent;
-    color:#fff;
-    font-size:13px;
+    flex:0 0 auto; width:19px; height:19px; border-radius:6px; border:2px solid var(--ink-soft); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; background:transparent; color:#fff; font-size:11px;
     transition: all .15s ease;
   }
   .todo-item.done .todo-check{ background:var(--coral); border-color:var(--coral); }
-  .todo-text{
-    flex:1;
-    font-size:15px;
-    color:var(--ink);
-    word-break:break-word;
-  }
-  body.night .todo-text{ color:#EAF0FF; }
+  .todo-text{ flex:1; font-size:14px; color:var(--ink); word-break:break-word; }
   .todo-item.done .todo-text{ text-decoration:line-through; color:var(--ink-soft); }
-  .todo-del{
-    flex:0 0 auto;
-    border:none;
-    background:transparent;
-    color:var(--ink-soft);
-    font-size:18px;
-    cursor:pointer;
-    opacity:0.5;
-    transition: opacity .15s ease, color .15s ease;
-  }
+  .todo-del{ flex:0 0 auto; border:none; background:transparent; color:var(--ink-soft); font-size:16px; cursor:pointer; opacity:0.5; }
   .todo-del:hover{ opacity:1; color:var(--coral); }
-  .todo-empty{
-    color:var(--ink-soft);
-    font-size:14px;
-    padding:8px 4px;
-  }
-  .todo-footer{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:16px;
-    padding-top:14px;
-    border-top:1px solid var(--ring);
-  }
-  .todo-count{ font-size:13px; color:var(--ink-soft); }
-  .todo-clear{
-    border:none;
-    background:transparent;
-    color:var(--ink-soft);
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-    text-decoration:underline;
-  }
+  .todo-empty{ color:var(--ink-soft); font-size:13px; padding:6px 2px; }
+  .todo-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:12px; border-top:1px solid rgba(27,42,74,0.14); }
+  .todo-count{ font-size:12px; color:var(--ink-soft); }
+  .todo-clear{ border:none; background:transparent; color:var(--ink-soft); font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline; }
   .todo-clear:hover{ color:var(--coral); }
 
-  footer{
-    text-align:center;
-    margin-top:56px;
-    font-size:12px;
-    color:var(--ink-soft);
-  }
+  /* NEWS MEMO */
+  .news-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; max-height:190px; overflow-y:auto; }
+  .news-list li{ border-bottom:1px solid rgba(27,42,74,0.10); padding-bottom:10px; }
+  .news-list li:last-child{ border-bottom:none; padding-bottom:0; }
+  .news-list a{ color:var(--ink); text-decoration:none; font-size:14px; font-weight:500; line-height:1.5; display:block; }
+  .news-list a:hover{ color:var(--coral); }
+  .news-source{ display:inline-block; margin-top:4px; font-size:11px; color:var(--ink-soft); }
+
+  footer{ text-align:center; margin-top:60px; font-size:12px; color:var(--ink-soft); }
+  body.night footer{ color:#B6C2E6; }
+
+  ::-webkit-scrollbar{ width:6px; }
+  ::-webkit-scrollbar-thumb{ background:rgba(27,42,74,0.2); border-radius:10px; }
 
   a, button{ font-family:'Noto Sans KR', sans-serif; }
   ::selection{ background:var(--sun); color:var(--ink); }
@@ -358,12 +241,11 @@
 
   <section class="hero">
     <p class="greet" id="greeting">좋은 하루예요</p>
-    <h1 class="clock" id="clock">--:--<span class="ampm" id="ampm"></span></h1>
-    <p class="date" id="dateStr"></p>
+    <p class="greet-sub">오늘도 좋은 하루 보내세요 📌</p>
 
     <form class="search-wrap" id="searchForm" role="search">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="searchInput" type="text" placeholder="검색어를 입력하세요" autocomplete="off" autofocus>
+      <input id="searchInput" type="text" placeholder="검색어를 입력하세요" autocomplete="off">
       <div class="engine-toggle" id="engineToggle">
         <button type="button" data-engine="google" class="active">Google</button>
         <button type="button" data-engine="naver">Naver</button>
@@ -372,32 +254,69 @@
     </form>
   </section>
 
-  <section class="grid">
-    <div class="card" id="weatherCard">
-      <h2>서울 날씨</h2>
-      <div id="weatherBody" class="weather-loading">불러오는 중…</div>
+  <section class="board">
+
+    <!-- 현재 시간 -->
+    <div class="memo-wrap" style="--rot:-1.6deg;">
+      <div class="memo" style="--note:var(--note-time);">
+        <span class="tape"></span>
+        <div class="memo-fold"></div>
+        <h2 class="memo-title">⏰ 현재 시간</h2>
+        <div class="memo-body">
+          <div class="time-display" id="clock">--:--<span class="ampm" id="ampm"></span></div>
+          <div class="time-date" id="dateStr"></div>
+          <div class="time-note-msg">오늘 하루도 화이팅!</div>
+        </div>
+      </div>
     </div>
 
-    <div class="card" id="newsCard">
-      <h2>기술 뉴스</h2>
-      <div id="newsBody" class="news-loading">불러오는 중…</div>
+    <!-- 오늘의 할일 -->
+    <div class="memo-wrap" style="--rot:1.2deg;">
+      <div class="memo" style="--note:var(--note-todo);">
+        <span class="tape"></span>
+        <div class="memo-fold"></div>
+        <h2 class="memo-title">✅ 오늘의 할일</h2>
+        <div class="memo-body">
+          <div class="todo-input-row">
+            <input id="todoInput" type="text" placeholder="할 일을 입력하고 Enter" autocomplete="off">
+            <button class="todo-add" id="todoAdd" aria-label="할일 추가">+</button>
+          </div>
+          <ul class="todo-list" id="todoList"></ul>
+          <div class="todo-footer">
+            <span class="todo-count" id="todoCount"></span>
+            <button class="todo-clear" id="todoClear">완료 지우기</button>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- 오늘의 날씨 -->
+    <div class="memo-wrap" style="--rot:0.9deg;">
+      <div class="memo" style="--note:var(--note-weather);">
+        <span class="tape"></span>
+        <div class="memo-fold"></div>
+        <h2 class="memo-title">☀️ 오늘의 날씨</h2>
+        <div class="memo-body" id="weatherBody">
+          <span class="weather-loading">불러오는 중…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 최신 기술 뉴스 -->
+    <div class="memo-wrap" style="--rot:-1deg;">
+      <div class="memo" style="--note:var(--note-news);">
+        <span class="tape"></span>
+        <div class="memo-fold"></div>
+        <h2 class="memo-title">📰 최신 기술 뉴스</h2>
+        <div class="memo-body" id="newsBody">
+          <span class="news-loading">불러오는 중…</span>
+        </div>
+      </div>
+    </div>
+
   </section>
 
-  <section class="card todo-card">
-    <h2>오늘의 할일</h2>
-    <div class="todo-input-row">
-      <input id="todoInput" type="text" placeholder="할 일을 입력하고 Enter" autocomplete="off">
-      <button class="todo-add" id="todoAdd" aria-label="할일 추가">+</button>
-    </div>
-    <ul class="todo-list" id="todoList"></ul>
-    <div class="todo-footer">
-      <span class="todo-count" id="todoCount"></span>
-      <button class="todo-clear" id="todoClear">완료 항목 지우기</button>
-    </div>
-  </section>
-
-  <footer>매일 아침, 오늘의 날씨와 기술 소식을 한눈에</footer>
+  <footer>매일 아침, 오늘의 할일과 날씨, 기술 소식을 한눈에</footer>
 </div>
 
 <script>
@@ -506,7 +425,6 @@ async function loadWeather(){
     const c = data.current;
     const [desc, icon] = WEATHER_CODES[c.weather_code] || ['알 수 없음','🌡️'];
 
-    body.classList.remove('weather-loading');
     body.innerHTML = `
       <div class="weather-top">
         <div class="weather-icon">${icon}</div>
@@ -526,9 +444,9 @@ async function loadWeather(){
   }
 }
 loadWeather();
-setInterval(loadWeather, 10*60*1000); // 10분마다 갱신
+setInterval(loadWeather, 10*60*1000);
 
-/* ---------- 기술 뉴스 (RSS -> JSON 변환 서비스 이용) ---------- */
+/* ---------- 기술 뉴스 ---------- */
 async function loadNews(){
   const body = document.getElementById('newsBody');
   const feedUrl = 'https://news.google.com/rss/search?q=%EA%B8%B0%EC%88%A0%20when:1d&hl=ko&gl=KR&ceid=KR:ko';
@@ -539,7 +457,7 @@ async function loadNews(){
     const data = await res.json();
     if (data.status !== 'ok' || !data.items || !data.items.length) throw new Error('empty');
 
-    const items = data.items.slice(0, 8);
+    const items = data.items.slice(0, 6);
     body.innerHTML = `<ul class="news-list">${
       items.map(it=>{
         const title = it.title.replace(/ - .*$/, '');
@@ -552,22 +470,18 @@ async function loadNews(){
   }
 }
 loadNews();
-setInterval(loadNews, 15*60*1000); // 15분마다 갱신
+setInterval(loadNews, 15*60*1000);
 
 /* ---------- 오늘의 할일 (localStorage 저장) ---------- */
 const TODO_KEY = 'myhomepage.todos';
 
 function loadTodos(){
-  try{
-    return JSON.parse(localStorage.getItem(TODO_KEY)) || [];
-  }catch(err){
-    return [];
-  }
+  try{ return JSON.parse(localStorage.getItem(TODO_KEY)) || []; }
+  catch(err){ return []; }
 }
 function saveTodos(todos){
-  try{
-    localStorage.setItem(TODO_KEY, JSON.stringify(todos));
-  }catch(err){ /* localStorage 사용 불가 시 무시 */ }
+  try{ localStorage.setItem(TODO_KEY, JSON.stringify(todos)); }
+  catch(err){ /* localStorage 사용 불가 시 무시 */ }
 }
 
 let todos = loadTodos();
@@ -577,7 +491,7 @@ function renderTodos(){
   const countEl = document.getElementById('todoCount');
 
   if (!todos.length){
-    list.innerHTML = `<li class="todo-empty">아직 할 일이 없어요. 위에 입력해보세요.</li>`;
+    list.innerHTML = `<li class="todo-empty">할 일이 없어요.</li>`;
   } else {
     list.innerHTML = todos.map(t => `
       <li class="todo-item ${t.done ? 'done' : ''}" data-id="${t.id}">
@@ -589,7 +503,7 @@ function renderTodos(){
   }
 
   const doneCount = todos.filter(t => t.done).length;
-  countEl.textContent = todos.length ? `총 ${todos.length}개 · 완료 ${doneCount}개` : '';
+  countEl.textContent = todos.length ? `${todos.length}개 · 완료 ${doneCount}` : '';
 }
 
 function escapeHtml(str){
@@ -615,9 +529,8 @@ document.getElementById('todoAdd').addEventListener('click', () => {
 document.getElementById('todoInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter'){
     e.preventDefault();
-    const input = e.target;
-    addTodo(input.value);
-    input.value = '';
+    addTodo(e.target.value);
+    e.target.value = '';
   }
 });
 document.getElementById('todoList').addEventListener('click', (e) => {
